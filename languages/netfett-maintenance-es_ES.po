@@ -292,3 +292,20 @@ msgstr "Sitio web en mantenimiento"
 #: netfett-maintenance.php:820
 msgid "You do not have sufficient permissions to perform this action."
 msgstr "No tiene permisos suficientes para realizar esta acción."
+
+#: netfett-maintenance.php:898
+msgid "Settings"
+msgstr "Ajustes"
+
+#: netfett-maintenance.php:926
+msgid "Netfett Maintenance was successfully activated!"
+msgstr "¡Netfett Maintenance se ha activado correctamente!"
+
+#: netfett-maintenance.php:929
+msgid "Set up your maintenance page: choose a template, upload your logo, or activate maintenance mode whenever you are ready."
+msgstr "Configura tu página de mantenimiento: elige una plantilla, sube tu logotipo o activa el modo de mantenimiento cuando estés listo."
+
+#: netfett-maintenance.php:933
+msgid "Configure Plugin"
+msgstr "Ir a la configuración"
+

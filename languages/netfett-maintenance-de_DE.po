@@ -292,3 +292,20 @@ msgstr "Website im Wartungsmodus"
 #: netfett-maintenance.php:820
 msgid "You do not have sufficient permissions to perform this action."
 msgstr "Sie haben keine ausreichenden Berechtigungen, um diese Aktion durchzuführen."
+
+#: netfett-maintenance.php:898
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: netfett-maintenance.php:926
+msgid "Netfett Maintenance was successfully activated!"
+msgstr "Netfett Maintenance wurde erfolgreich aktiviert!"
+
+#: netfett-maintenance.php:929
+msgid "Set up your maintenance page: choose a template, upload your logo, or activate maintenance mode whenever you are ready."
+msgstr "Richte jetzt deine Wartungsseite ein: Wähle ein Template, lade dein Logo hoch oder aktiviere den Wartungsmodus nach deinen Wünschen."
+
+#: netfett-maintenance.php:933
+msgid "Configure Plugin"
+msgstr "Zur Konfiguration"
+

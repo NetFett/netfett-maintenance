@@ -31,6 +31,9 @@ if ( version_compare( PHP_VERSION, '7.4', '<' ) ) {
 class Netfett_Maintenance {
     
     public function __construct() {
+        // Localization
+        add_action( 'init', array( $this, 'load_textdomain' ) );
+
         // Redirection & Bypass Link
         add_action( 'init', array( $this, 'check_bypass_link' ) );
         add_action( 'template_redirect', array( $this, 'render_maintenance_page' ) );
@@ -51,6 +54,10 @@ class Netfett_Maintenance {
         // Settings link in plugins table
         add_filter( 'plugin_action_links_netfett-maintenance/netfett-maintenance.php', array( $this, 'add_plugin_action_links' ) );
         add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_plugin_action_links' ) );
+    }
+
+    public function load_textdomain(): void {
+        load_plugin_textdomain( 'netfett-maintenance', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
     }
 
     public function enqueue_admin_assets( $hook ): void {
@@ -916,15 +923,15 @@ class Netfett_Maintenance {
         ?>
         <div class="notice notice-info is-dismissible netfett-activation-notice" style="border-left-color: #2271b1; padding: 14px 18px; margin: 15px 0 20px 0;">
             <p style="font-size: 15px; font-weight: 600; margin: 0 0 6px 0; color: #1d2327;">
-                🎉 <?php esc_html_e( 'Netfett Maintenance wurde erfolgreich aktiviert!', 'netfett-maintenance' ); ?>
+                🎉 <?php esc_html_e( 'Netfett Maintenance was successfully activated!', 'netfett-maintenance' ); ?>
             </p>
             <p style="font-size: 13px; color: #50575e; margin: 0 0 12px 0; max-width: 800px; line-height: 1.5;">
-                <?php esc_html_e( 'Richte jetzt deine Wartungsseite ein: Wähle ein Template, lade dein Logo hoch oder aktiviere den Wartungsmodus nach deinen Wünschen.', 'netfett-maintenance' ); ?>
+                <?php esc_html_e( 'Set up your maintenance page: choose a template, upload your logo, or activate maintenance mode whenever you are ready.', 'netfett-maintenance' ); ?>
             </p>
             <p style="margin: 0;">
                 <a href="<?php echo esc_url( $settings_url ); ?>" class="button button-primary button-large" style="display: inline-flex; align-items: center; gap: 6px;">
                     <span class="dashicons dashicons-admin-generic" style="font-size: 18px; width: 18px; height: 18px; line-height: 18px;"></span>
-                    <?php esc_html_e( 'Zur Konfiguration', 'netfett-maintenance' ); ?> &rarr;
+                    <?php esc_html_e( 'Configure Plugin', 'netfett-maintenance' ); ?> &rarr;
                 </a>
             </p>
         </div>
