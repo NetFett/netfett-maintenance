@@ -1,0 +1,294 @@
+# Copyright (C) 2026 Netfett
+# This file is distributed under the same license as the Netfett Maintenance plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Netfett Maintenance 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/netfett-maintenance\n"
+"Last-Translator: Netfett <wp@netfett.de>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-17T15:30:00+02:00\n"
+"PO-Revision-Date: 2026-07-17T15:30:00+02:00\n"
+"Language: es_ES\n"
+"X-Generator: Custom PowerShell Parser\n"
+"X-Domain: netfett-maintenance\n"
+
+#: netfett-maintenance.php:282
+msgid "24 Hours"
+msgstr "24 Horas"
+
+#: netfett-maintenance.php:284
+msgid "30 Days"
+msgstr "30 Días"
+
+#: netfett-maintenance.php:283
+msgid "7 Days"
+msgstr "7 Días"
+
+#: netfett-maintenance.php:238
+msgid "All settings have been successfully reset to default values."
+msgstr "Todos los ajustes se han restablecido correctamente a los valores predeterminados."
+
+#: netfett-maintenance.php:271
+msgid "Are you sure you want to regenerate the bypass link? All existing links and cookies will become invalid immediately."
+msgstr "¿Está seguro de que desea regenerar el enlace de desvío? Todos los enlaces y cookies existentes dejarán de ser válidos de inmediato."
+
+#: netfett-maintenance.php:587
+msgid "Are you sure you want to reset all settings to their default values? This action cannot be undone."
+msgstr "¿Está seguro de que desea restablecer todos los ajustes a sus valores predeterminados? Esta acción no se puede deshacer."
+
+#: netfett-maintenance.php:279
+msgid "Bypass Duration:"
+msgstr "Duración del desvío:"
+
+#: netfett-maintenance.php:260
+msgid "Bypass Link (Client Preview)"
+msgstr "Enlace de desvío (Vista previa del cliente)"
+
+#: netfett-maintenance.php:576
+msgid "Check this box to perform a clean uninstall. All maintenance settings and social links will be permanently deleted from the database when you delete the plugin."
+msgstr "Marque esta casilla para realizar una desinstalación limpia. Todos los ajustes de mantenimiento y enlaces sociales se eliminarán permanentemente de la base de datos cuando elimine el complemento."
+
+#: netfett-maintenance.php:384
+msgid "Choose the visual style of your maintenance page. Previews illustrate the background and container style."
+msgstr "Elija el estilo visual de su página de mantenimiento. Las vistas previas ilustran el estilo del fondo y del contenedor."
+
+#: netfett-maintenance.php:525
+msgid "Contact Email (optional)"
+msgstr "Correo electrónico de contacto (opcional)"
+
+#: templates/cosmic-dark.php:446
+#: templates/nordic-clean.php:327
+msgid "Contact Us"
+msgstr "Contáctenos"
+
+#: netfett-maintenance.php:313
+msgid "Copy failed. Please copy the link manually."
+msgstr "Error al copiar. Copie el enlace manualmente."
+
+#: netfett-maintenance.php:275
+msgid "Copy Link"
+msgstr "Copiar enlace"
+
+#: templates/cosmic-dark.php:384
+#: templates/cyberpunk-neon.php:342
+#: templates/nordic-clean.php:265
+msgid "Days"
+msgstr "Días"
+
+#: netfett-maintenance.php:492
+msgid "Deactivate maintenance mode automatically when countdown ends"
+msgstr "Desactivar el modo de mantenimiento automáticamente cuando termine la cuenta regresiva"
+
+#: netfett-maintenance.php:574
+msgid "Delete all plugin settings and data when deleting the plugin"
+msgstr "Eliminar todos los ajustes y datos del complemento al eliminar el complemento"
+
+#: templates/cyberpunk-neon.php:404
+msgid "Establish Contact"
+msgstr "Establecer contacto"
+
+#: netfett-maintenance.php:477
+msgid "Estimated Completion (Countdown)"
+msgstr "Finalización estimada (Cuenta regresiva)"
+
+#: netfett-maintenance.php:548
+msgid "Facebook URL"
+msgstr "URL de Facebook"
+
+#: netfett-maintenance.php:379
+msgid "Futuristic Tech Glow"
+msgstr "Brillo tecnológico futurista"
+
+#: templates/cosmic-dark.php:388
+#: templates/cyberpunk-neon.php:346
+#: templates/nordic-clean.php:269
+msgid "Hours"
+msgstr "Horas"
+
+#: netfett-maintenance.php:541
+msgid "Instagram URL"
+msgstr "URL de Instagram"
+
+#: netfett-maintenance.php:528
+msgid "Leave an email address for visitor inquiries."
+msgstr "Deje una dirección de correo electrónico para consultas de los visitantes."
+
+#: netfett-maintenance.php:555
+msgid "LinkedIn URL"
+msgstr "URL de LinkedIn"
+
+#: templates/cosmic-dark.php:480
+#: templates/cyberpunk-neon.php:437
+#: templates/nordic-clean.php:360
+msgid "Log in here"
+msgstr "Iniciar sesión aquí"
+
+#: netfett-maintenance.php:410
+msgid "Logo Image"
+msgstr "Imagen del logotipo"
+
+#: templates/nordic-clean.php:225
+msgid "Maintenance Active"
+msgstr "Mantenimiento activo"
+
+#: templates/cosmic-dark.php:338
+msgid "Maintenance Mode"
+msgstr "Modo de mantenimiento"
+
+#: netfett-maintenance.php:688
+msgid "Maintenance Mode ACTIVE"
+msgstr "Modo de mantenimiento ACTIVO"
+
+#: netfett-maintenance.php:249
+msgid "Maintenance Mode Status"
+msgstr "Estado del modo de mantenimiento"
+
+#: netfett-maintenance.php:511
+msgid "Maintenance Page Title"
+msgstr "Título de la página de mantenimiento"
+
+#: netfett-maintenance.php:518
+msgid "Maintenance Text / Message"
+msgstr "Texto / Mensaje de mantenimiento"
+
+#: netfett-maintenance.php:241
+msgid "Manage the maintenance status of your website. When active, visitors will see a modern and responsive maintenance page."
+msgstr "Gestione el estado de mantenimiento de su sitio web. Cuando esté activo, los visitantes verán una página de mantenimiento moderna y adaptativa."
+
+#: netfett-maintenance.php:343
+msgid "Minimal Light Vibe"
+msgstr "Estilo minimalista claro"
+
+#: templates/cosmic-dark.php:392
+#: templates/cyberpunk-neon.php:350
+#: templates/nordic-clean.php:273
+msgid "Minutes"
+msgstr "Minutos"
+
+#: netfett-maintenance.php:362
+msgid "Modern Dark Glow"
+msgstr "Brillo oscuro moderno"
+
+#: netfett-maintenance.php:142
+#: netfett-maintenance.php:143
+msgid "Netfett Maintenance"
+msgstr "Netfett Maintenance"
+
+#: netfett-maintenance.php:691
+msgid "Netfett Maintenance Settings"
+msgstr "Ajustes de Netfett Maintenance"
+
+#: netfett-maintenance.php:25
+msgid "Netfett Maintenance requires PHP version 7.4 or higher. Your current version is %s."
+msgstr "Netfett Maintenance requiere la versión de PHP 7.4 o superior. Su versión actual es %s."
+
+#: netfett-maintenance.php:713
+msgid "Netfett Maintenance:"
+msgstr "Netfett Maintenance:"
+
+#: netfett-maintenance.php:487
+msgid "Optional. Set a date and time when the maintenance is expected to end to show a live countdown."
+msgstr "Opcional. Establezca una fecha y hora en la que se espera que finalice el mantenimiento para mostrar una cuenta regresiva en vivo."
+
+#: netfett-maintenance.php:192
+#: netfett-maintenance.php:520
+#: templates/cosmic-dark.php:8
+#: templates/cyberpunk-neon.php:8
+#: templates/nordic-clean.php:8
+msgid "Our website is currently undergoing maintenance. We are working on something great and will be back for you shortly."
+msgstr "Nuestro sitio web se encuentra actualmente en mantenimiento. Estamos trabajando en algo grande y volveremos con usted en breve."
+
+#: netfett-maintenance.php:584
+msgid "Preview Page"
+msgstr "Página de vista previa"
+
+#: netfett-maintenance.php:272
+msgid "Regenerate Link"
+msgstr "Regenerar enlace"
+
+#: netfett-maintenance.php:420
+msgid "Remove Logo"
+msgstr "Eliminar logotipo"
+
+#: netfett-maintenance.php:485
+msgid "Reset"
+msgstr "Restablecer"
+
+#: netfett-maintenance.php:588
+msgid "Reset to Defaults"
+msgstr "Restablecer a valores predeterminados"
+
+#: netfett-maintenance.php:582
+msgid "Save Settings"
+msgstr "Guardar ajustes"
+
+#: templates/cosmic-dark.php:396
+#: templates/cyberpunk-neon.php:354
+#: templates/nordic-clean.php:277
+msgid "Seconds"
+msgstr "Segundos"
+
+#: netfett-maintenance.php:419
+#: netfett-maintenance.php:443
+msgid "Select Logo"
+msgstr "Seleccionar logotipo"
+
+#: netfett-maintenance.php:289
+msgid "Share this link with clients. Visitors who access this link can view the website without logging in. Regenerating the link will immediately invalidate the old one."
+msgstr "Comparta este enlace con los clientes. Los visitantes que accedan a este enlace podrán ver el sitio web sin iniciar sesión. Regenerar el enlace invalidará inmediatamente el anterior."
+
+#: netfett-maintenance.php:537
+msgid "Social Media Links"
+msgstr "Enlaces de redes sociales"
+
+#: templates/cyberpunk-neon.php:309
+msgid "System.Maintenance"
+msgstr "Mantenimiento del sistema"
+
+#: netfett-maintenance.php:323
+msgid "Template Design"
+msgstr "Template-Design"
+
+#: netfett-maintenance.php:255
+msgid "Toggle maintenance mode on/off."
+msgstr "Activar/desactivar el modo de mantenimiento."
+
+#: netfett-maintenance.php:562
+msgid "Twitter / X URL"
+msgstr "URL de Twitter / X"
+
+#: netfett-maintenance.php:569
+msgid "Uninstall Behavior"
+msgstr "Comportamiento de desinstalación"
+
+#: netfett-maintenance.php:421
+msgid "Upload or select a logo to be displayed above the title on the maintenance page."
+msgstr "Suba o seleccione un logotipo para mostrar sobre el título en la página de mantenimiento."
+
+#: netfett-maintenance.php:445
+msgid "Use this Logo"
+msgstr "Usar este logotipo"
+
+#: netfett-maintenance.php:714
+msgid "View settings"
+msgstr "Ver ajustes"
+
+#: netfett-maintenance.php:187
+#: netfett-maintenance.php:513
+#: templates/cosmic-dark.php:7
+#: templates/cyberpunk-neon.php:7
+#: templates/nordic-clean.php:7
+msgid "We will be back soon!"
+msgstr "¡Volveremos pronto!"
+
+#: netfett-maintenance.php:129
+msgid "Website under maintenance"
+msgstr "Sitio web en mantenimiento"
+
+#: netfett-maintenance.php:754
+#: netfett-maintenance.php:820
+msgid "You do not have sufficient permissions to perform this action."
+msgstr "No tiene permisos suficientes para realizar esta acción."
