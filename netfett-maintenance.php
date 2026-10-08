@@ -913,10 +913,12 @@ class Netfett_Maintenance {
         }
 
         $screen = get_current_screen();
-        if ( $screen && $screen->id === 'settings_page_netfett-maintenance' ) {
-            delete_option( 'netfett_maint_activation_notice' );
+        if ( ! $screen || $screen->id !== 'plugins' ) {
             return;
         }
+
+        // Delete the option immediately so it is shown only once and disappears on subsequent navigation
+        delete_option( 'netfett_maint_activation_notice' );
 
         $settings_url = admin_url( 'options-general.php?page=netfett-maintenance' );
         $nonce        = wp_create_nonce( 'netfett_dismiss_notice' );
