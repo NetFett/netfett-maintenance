@@ -893,20 +893,36 @@ class Netfett_Maintenance {
     }
 
     /**
-     * Handles redirecting to the settings page upon plugin activation (fallback).
+     * Handles redirecting to the settings page upon plugin activation.
      */
     public function handle_activation_redirect() {
-        if ( get_option( 'netfett_maint_activation_redirect' ) ) {
-            delete_option( 'netfett_maint_activation_redirect' );
-
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            if ( isset( $_GET['activate-multi'] ) || is_network_admin() ) {
-                return;
-            }
-
-            wp_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
-            exit;
+        if ( ! get_option( 'netfett_maint_activation_redirect' ) ) {
+            return;
         }
+
+        // Do not redirect for AJAX, REST requests, Cron, or CLI
+        if ( ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+            return;
+        }
+        if ( ( function_exists( 'wp_is_json_request' ) && wp_is_json_request() ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+            return;
+        }
+        if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+            return;
+        }
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+            return;
+        }
+
+        // Do not redirect on bulk activation or in network admin
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( isset( $_GET['activate-multi'] ) || is_network_admin() ) {
+            return;
+        }
+
+        delete_option( 'netfett_maint_activation_redirect' );
+        wp_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
+        exit;
     }
 }
 
@@ -916,18 +932,4 @@ register_activation_hook( __FILE__, function() {
     update_option( 'netfett_maint_activation_redirect', 1 );
 } );
 
-// Immediate Welcome Redirect upon plugin activation (with Windows path normalization)
-add_action( 'activated_plugin', function( $plugin, $network_wide = false ) {
-    $current = plugin_basename( __FILE__ );
-    if ( function_exists( 'wp_normalize_path' ) ) {
-        $plugin = wp_normalize_path( $plugin );
-        $current = wp_normalize_path( $current );
-    }
-    if ( $plugin === $current && ! $network_wide && ! is_network_admin() ) {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( ! isset( $_GET['activate-multi'] ) && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-            wp_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
-            exit;
-        }
-    }
-}, 10, 2 );
+
