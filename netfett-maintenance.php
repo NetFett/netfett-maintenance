@@ -38,6 +38,7 @@ class Netfett_Maintenance {
         // Admin Settings Page
         add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
         add_action( 'admin_init', array( $this, 'register_settings' ) );
+        add_action( 'admin_init', array( $this, 'handle_activation_redirect' ) );
         add_action( 'admin_init', array( $this, 'handle_regenerate_bypass_token' ) );
         add_action( 'admin_init', array( $this, 'handle_reset_defaults' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
@@ -57,7 +58,7 @@ class Netfett_Maintenance {
      * Checks if the maintenance mode is enabled.
      */
     private function is_maintenance_active(): bool {
-        $enabled = get_option( 'netfett_maint_enabled', '1' );
+        $enabled = get_option( 'netfett_maint_enabled', '0' );
         if ( $enabled !== '1' ) {
             return false;
         }
@@ -167,7 +168,7 @@ class Netfett_Maintenance {
         register_setting( 'netfett_maint_group', 'netfett_maint_enabled', array(
             'type'              => 'string',
             'sanitize_callback' => 'sanitize_text_field',
-            'default'           => '1',
+            'default'           => '0',
         ) );
         register_setting( 'netfett_maint_group', 'netfett_maint_template', array(
             'type'              => 'string',
@@ -262,7 +263,7 @@ class Netfett_Maintenance {
                         <th scope="row" style="width: 220px; font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Maintenance Mode Status', 'netfett-maintenance' ); ?></th>
                         <td style="padding: 15px 10px;">
                             <label class="netfett-switch" style="vertical-align: middle;">
-                                <input type="checkbox" name="netfett_maint_enabled" value="1" <?php checked( get_option( 'netfett_maint_enabled', '1' ), '1' ); ?> />
+                                <input type="checkbox" name="netfett_maint_enabled" value="1" <?php checked( get_option( 'netfett_maint_enabled', '0' ), '1' ); ?> />
                                 <span class="netfett-slider"></span>
                             </label>
                             <span style="margin-left: 15px; font-size: 13px; color: #646970; font-style: italic; vertical-align: middle;"><?php esc_html_e( 'Toggle maintenance mode on/off.', 'netfett-maintenance' ); ?></span>
@@ -874,6 +875,27 @@ class Netfett_Maintenance {
         }
         return false;
     }
+
+    /**
+     * Handles redirecting to the settings page upon plugin activation.
+     */
+    public function handle_activation_redirect() {
+        if ( get_transient( '_netfett_maint_activation_redirect' ) ) {
+            delete_transient( '_netfett_maint_activation_redirect' );
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            if ( isset( $_GET['activate-multi'] ) || is_network_admin() ) {
+                return;
+            }
+
+            wp_safe_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
+            exit;
+        }
+    }
 }
 
 new Netfett_Maintenance();
+
+register_activation_hook( __FILE__, function() {
+    set_transient( '_netfett_maint_activation_redirect', true, 30 );
+} );
