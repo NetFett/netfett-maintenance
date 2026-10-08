@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Netfett Maintenance
  * Description: Displays a beautiful, modern maintenance page when activated or enabled.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Netfett
  * Author URI: https://netfett.de
  * Requires at least: 6.0
@@ -48,6 +48,7 @@ class Netfett_Maintenance {
         add_action( 'admin_notices', array( $this, 'admin_notice_indicator' ) );
 
         // Settings link in plugins table
+        add_filter( 'plugin_action_links_netfett-maintenance/netfett-maintenance.php', array( $this, 'add_plugin_action_links' ) );
         add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_plugin_action_links' ) );
     }
 
@@ -903,7 +904,7 @@ class Netfett_Maintenance {
                 return;
             }
 
-            wp_safe_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
+            wp_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
             exit;
         }
     }
@@ -925,7 +926,7 @@ add_action( 'activated_plugin', function( $plugin, $network_wide = false ) {
     if ( $plugin === $current && ! $network_wide && ! is_network_admin() ) {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ( ! isset( $_GET['activate-multi'] ) && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-            wp_safe_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
+            wp_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
             exit;
         }
     }
