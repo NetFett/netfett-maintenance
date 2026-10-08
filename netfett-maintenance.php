@@ -38,7 +38,6 @@ class Netfett_Maintenance {
         // Admin Settings Page
         add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
         add_action( 'admin_init', array( $this, 'register_settings' ) );
-        add_action( 'admin_init', array( $this, 'handle_activation_redirect' ) );
         add_action( 'admin_init', array( $this, 'handle_regenerate_bypass_token' ) );
         add_action( 'admin_init', array( $this, 'handle_reset_defaults' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
@@ -46,6 +45,8 @@ class Netfett_Maintenance {
         // Admin notices & status indicators
         add_action( 'admin_bar_menu', array( $this, 'admin_bar_indicator' ), 999 );
         add_action( 'admin_notices', array( $this, 'admin_notice_indicator' ) );
+        add_action( 'admin_notices', array( $this, 'admin_notice_activation' ) );
+        add_action( 'wp_ajax_netfett_dismiss_activation_notice', array( $this, 'ajax_dismiss_activation_notice' ) );
 
         // Settings link in plugins table
         add_filter( 'plugin_action_links_netfett-maintenance/netfett-maintenance.php', array( $this, 'add_plugin_action_links' ) );
@@ -893,43 +894,69 @@ class Netfett_Maintenance {
     }
 
     /**
-     * Handles redirecting to the settings page upon plugin activation.
+     * Displays a friendly welcome banner after plugin activation.
      */
-    public function handle_activation_redirect() {
-        if ( ! get_option( 'netfett_maint_activation_redirect' ) ) {
+    public function admin_notice_activation() {
+        if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
-        // Do not redirect for AJAX, REST requests, Cron, or CLI
-        if ( ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-            return;
-        }
-        if ( ( function_exists( 'wp_is_json_request' ) && wp_is_json_request() ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
-            return;
-        }
-        if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-            return;
-        }
-        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+        if ( ! get_option( 'netfett_maint_activation_notice' ) ) {
             return;
         }
 
-        // Do not redirect on bulk activation or in network admin
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( isset( $_GET['activate-multi'] ) || is_network_admin() ) {
+        $screen = get_current_screen();
+        if ( $screen && $screen->id === 'settings_page_netfett-maintenance' ) {
+            delete_option( 'netfett_maint_activation_notice' );
             return;
         }
 
-        delete_option( 'netfett_maint_activation_redirect' );
-        wp_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
-        exit;
+        $settings_url = admin_url( 'options-general.php?page=netfett-maintenance' );
+        $nonce        = wp_create_nonce( 'netfett_dismiss_notice' );
+        ?>
+        <div class="notice notice-info is-dismissible netfett-activation-notice" style="border-left-color: #2271b1; padding: 14px 18px; margin: 15px 0 20px 0;">
+            <p style="font-size: 15px; font-weight: 600; margin: 0 0 6px 0; color: #1d2327;">
+                🎉 <?php esc_html_e( 'Netfett Maintenance wurde erfolgreich aktiviert!', 'netfett-maintenance' ); ?>
+            </p>
+            <p style="font-size: 13px; color: #50575e; margin: 0 0 12px 0; max-width: 800px; line-height: 1.5;">
+                <?php esc_html_e( 'Richte jetzt deine Wartungsseite ein: Wähle ein Template, lade dein Logo hoch oder aktiviere den Wartungsmodus nach deinen Wünschen.', 'netfett-maintenance' ); ?>
+            </p>
+            <p style="margin: 0;">
+                <a href="<?php echo esc_url( $settings_url ); ?>" class="button button-primary button-large" style="display: inline-flex; align-items: center; gap: 6px;">
+                    <span class="dashicons dashicons-admin-generic" style="font-size: 18px; width: 18px; height: 18px; line-height: 18px;"></span>
+                    <?php esc_html_e( 'Zur Konfiguration', 'netfett-maintenance' ); ?> &rarr;
+                </a>
+            </p>
+        </div>
+        <script>
+        jQuery(document).on('click', '.netfett-activation-notice .notice-dismiss', function() {
+            jQuery.post(ajaxurl, {
+                action: 'netfett_dismiss_activation_notice',
+                nonce: '<?php echo esc_js( $nonce ); ?>'
+            });
+        });
+        </script>
+        <?php
+    }
+
+    /**
+     * AJAX handler to dismiss the activation notice.
+     */
+    public function ajax_dismiss_activation_notice() {
+        check_ajax_referer( 'netfett_dismiss_notice', 'nonce' );
+        if ( current_user_can( 'manage_options' ) ) {
+            delete_option( 'netfett_maint_activation_notice' );
+        }
+        wp_send_json_success();
     }
 }
 
 new Netfett_Maintenance();
 
 register_activation_hook( __FILE__, function() {
-    update_option( 'netfett_maint_activation_redirect', 1 );
+    update_option( 'netfett_maint_activation_notice', 1 );
 } );
 
-
+register_deactivation_hook( __FILE__, function() {
+    delete_option( 'netfett_maint_activation_notice' );
+} );
