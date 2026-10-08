@@ -46,6 +46,9 @@ class Netfett_Maintenance {
         // Admin notices & status indicators
         add_action( 'admin_bar_menu', array( $this, 'admin_bar_indicator' ), 999 );
         add_action( 'admin_notices', array( $this, 'admin_notice_indicator' ) );
+
+        // Settings link in plugins table
+        add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_plugin_action_links' ) );
     }
 
     public function enqueue_admin_assets( $hook ): void {
@@ -877,11 +880,23 @@ class Netfett_Maintenance {
     }
 
     /**
-     * Handles redirecting to the settings page upon plugin activation.
+     * Add direct Settings link to the plugins page action links.
+     *
+     * @param array $links Array of action links.
+     * @return array Modified array of action links.
+     */
+    public function add_plugin_action_links( $links ) {
+        $settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=netfett-maintenance' ) ) . '">' . esc_html__( 'Settings', 'netfett-maintenance' ) . '</a>';
+        array_unshift( $links, $settings_link );
+        return $links;
+    }
+
+    /**
+     * Handles redirecting to the settings page upon plugin activation (fallback).
      */
     public function handle_activation_redirect() {
-        if ( get_transient( '_netfett_maint_activation_redirect' ) ) {
-            delete_transient( '_netfett_maint_activation_redirect' );
+        if ( get_option( 'netfett_maint_activation_redirect' ) ) {
+            delete_option( 'netfett_maint_activation_redirect' );
 
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if ( isset( $_GET['activate-multi'] ) || is_network_admin() ) {
@@ -897,5 +912,21 @@ class Netfett_Maintenance {
 new Netfett_Maintenance();
 
 register_activation_hook( __FILE__, function() {
-    set_transient( '_netfett_maint_activation_redirect', true, 30 );
+    update_option( 'netfett_maint_activation_redirect', 1 );
 } );
+
+// Immediate Welcome Redirect upon plugin activation (with Windows path normalization)
+add_action( 'activated_plugin', function( $plugin, $network_wide = false ) {
+    $current = plugin_basename( __FILE__ );
+    if ( function_exists( 'wp_normalize_path' ) ) {
+        $plugin = wp_normalize_path( $plugin );
+        $current = wp_normalize_path( $current );
+    }
+    if ( $plugin === $current && ! $network_wide && ! is_network_admin() ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( ! isset( $_GET['activate-multi'] ) && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+            wp_safe_redirect( admin_url( 'options-general.php?page=netfett-maintenance' ) );
+            exit;
+        }
+    }
+}, 10, 2 );
