@@ -4,7 +4,7 @@ Tags: maintenance, under construction, bypass link, countdown
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 1.0.1
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,3 +34,17 @@ Netfett Maintenance is a modern, lightweight, and extremely secure maintenance m
 2. The default minimal "Nordic Clean" template featuring clean typography and a light aesthetic.
 3. The glassmorphic "Cosmic Dark" template with floating animated color blobs.
 4. The high-contrast "Cyberpunk Neon" template with glowing borders and retro monospaced look.
+
+== Changelog ==
+
+= 1.0.3 =
+* Neu: Automatischer Update-Checker über GitHub Releases integriert.
+* Verbessert: Randlose hochauflösende Banner und Icons für das WordPress-Update-Modal.
+* Behoben: Barrierefreiheits- und HTML-Konformitäts-Warnungen im Adminbereich behoben.
+
+= 1.0.1 =
+* Verbessert: CSS-Optimierungen und flexibleres Layout.
+* Behoben: Validierung der Bypass-Token-Parameter.
+
+= 1.0.0 =
+* Erstveröffentlichung von Netfett Maintenance.

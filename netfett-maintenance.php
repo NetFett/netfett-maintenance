@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Netfett Maintenance
  * Description: Displays a beautiful, modern maintenance page when activated or enabled.
- * Version: 1.0.1
+ * Version: 1.0.3
  * Author: Netfett
  * Author URI: https://netfett.de
  * Requires at least: 6.0

@@ -283,6 +283,7 @@ if ( ! class_exists( 'Netfett_Update_Checker' ) ) {
 			}
 
 			$installed_version = $this->get_installed_version();
+			$assets            = $this->get_plugin_assets();
 
 			$plugin_payload = (object) array(
 				'id'            => $this->plugin_basename,
@@ -291,8 +292,8 @@ if ( ! class_exists( 'Netfett_Update_Checker' ) ) {
 				'new_version'   => $release['version'],
 				'url'           => $release['url'],
 				'package'       => $release['download_url'],
-				'icons'         => array(),
-				'banners'       => array(),
+				'icons'         => $assets['icons'],
+				'banners'       => $assets['banners'],
 				'banners_rtl'   => array(),
 				'tested'        => '',
 				'requires_php'  => '',
@@ -349,19 +350,193 @@ if ( ! class_exists( 'Netfett_Update_Checker' ) ) {
 			$response->trunk         = $release['download_url'];
 			$response->last_updated  = $release['published_at'];
 
+			// Banner und Icons
+			$assets = $this->get_plugin_assets();
+			if ( ! empty( $assets['banners'] ) ) {
+				$response->banners = $assets['banners'];
+			}
+			if ( ! empty( $assets['icons'] ) ) {
+				$response->icons = $assets['icons'];
+			}
+
+			// Readme-Abschnitte (Description, Installation, etc.) parsen
+			$readme_sections = $this->parse_readme_sections();
+
 			$sections = array();
-			if ( ! empty( $plugin_data['Description'] ) ) {
+
+			// 1. Description: Aus readme.txt falls vorhanden (mit Features), sonst Fallback auf Plugin-Header
+			if ( ! empty( $readme_sections['description'] ) ) {
+				$sections['description'] = $readme_sections['description'];
+			} elseif ( ! empty( $plugin_data['Description'] ) ) {
 				$sections['description'] = wp_kses_post( $plugin_data['Description'] );
 			}
 
+			// 2. Installation: Aus readme.txt
+			if ( ! empty( $readme_sections['installation'] ) ) {
+				$sections['installation'] = $readme_sections['installation'];
+			}
+
+			// 3. Changelog: Aktuelles GitHub-Release formatieren + Historie aus readme.txt
+			$changelog_parts = array();
 			if ( ! empty( $release['body'] ) ) {
-				// Markdown bzw. Release Notes formatieren
-				$sections['changelog'] = wpautop( esc_html( $release['body'] ) );
+				$changelog_parts[] = '<h4>Version ' . esc_html( $release['version'] ) . '</h4>' . $this->parse_markdown( $release['body'] );
+			}
+			if ( ! empty( $readme_sections['changelog'] ) ) {
+				$changelog_parts[] = $readme_sections['changelog'];
+			}
+
+			if ( ! empty( $changelog_parts ) ) {
+				$sections['changelog'] = implode( "<hr style='margin: 25px 0;' />\n", $changelog_parts );
 			}
 
 			$response->sections = $sections;
 
 			return $response;
+		}
+
+		/**
+		 * Liest und parst Abschnitte aus der readme.txt des Plugins, falls vorhanden.
+		 *
+		 * @return array<string, string> Assoziatives Array mit formatierten Abschnitten.
+		 */
+		protected function parse_readme_sections(): array {
+			$readme_file = dirname( $this->plugin_file ) . '/readme.txt';
+			if ( ! file_exists( $readme_file ) ) {
+				$readme_file = dirname( $this->plugin_file ) . '/README.md';
+			}
+
+			if ( ! file_exists( $readme_file ) ) {
+				return array();
+			}
+
+			$content = file_get_contents( $readme_file );
+			if ( empty( $content ) ) {
+				return array();
+			}
+
+			$sections = array();
+
+			// Abschnitte nach == Section Name == trennen (genau 2 Gleichheitszeichen)
+			if ( preg_match_all( '/^==\s*([^=\r\n]+?)\s*==\s*$(.*?)(?=^==\s*[^=\r\n]+?\s*==|\z)/ms', $content, $matches, PREG_SET_ORDER ) ) {
+				foreach ( $matches as $match ) {
+					$title = sanitize_title( trim( $match[1] ) );
+					$body  = trim( $match[2] );
+					if ( ! empty( $title ) && ! empty( $body ) ) {
+						$sections[ $title ] = $this->parse_markdown( $body );
+					}
+				}
+			}
+
+			return $sections;
+		}
+
+		/**
+		 * Einfacher, sicherer Markdown-zu-HTML Konverter für Release-Notes und Readmes.
+		 *
+		 * @param string $text Markdown-Text.
+		 * @return string Formatiertes HTML.
+		 */
+		protected function parse_markdown( string $text ): string {
+			$text = trim( $text );
+			if ( empty( $text ) ) {
+				return '';
+			}
+
+			// Überschriften: === H4 ===, == H3 ==, = Version =, ### H4, ## H3
+			$text = preg_replace( '/^===\s*(.*?)\s*===$/m', '<h4>$1</h4>', $text );
+			$text = preg_replace( '/^==\s*(.*?)\s*==$/m', '<h3>$1</h3>', $text );
+			$text = preg_replace( '/^=\s*(.*?)\s*=\s*$/m', '<h4>Version $1</h4>', $text );
+			$text = preg_replace( '/^###\s*(.*?)$/m', '<h4>$1</h4>', $text );
+			$text = preg_replace( '/^##\s*(.*?)$/m', '<h3>$1</h3>', $text );
+
+			// Fett, Kursiv und Code
+			$text = preg_replace( '/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text );
+			$text = preg_replace( '/\*(.*?)\*/', '<em>$1</em>', $text );
+			$text = preg_replace( '/`(.*?)`/', '<code>$1</code>', $text );
+
+			// Listen formatieren (- oder *)
+			$lines   = explode( "\n", str_replace( "\r", '', $text ) );
+			$in_list = false;
+			$output  = array();
+
+			foreach ( $lines as $line ) {
+				if ( preg_match( '/^[\*\-]\s+(.*)$/', trim( $line ), $m ) ) {
+					if ( ! $in_list ) {
+						$output[] = '<ul style="margin: 8px 0 16px 20px; list-style-type: disc;">';
+						$in_list  = true;
+					}
+					$output[] = '<li>' . $m[1] . '</li>';
+				} else {
+					if ( $in_list ) {
+						$output[] = '</ul>';
+						$in_list  = false;
+					}
+					$output[] = $line;
+				}
+			}
+			if ( $in_list ) {
+				$output[] = '</ul>';
+			}
+
+			$html = implode( "\n", $output );
+			return wpautop( $html );
+		}
+
+		/**
+		 * Ermittelt Plugin-Banner und Icons aus dem assets/-Verzeichnis.
+		 *
+		 * @return array{banners: array<string, string>, icons: array<string, string>}
+		 */
+		protected function get_plugin_assets(): array {
+			$plugin_dir = dirname( $this->plugin_file );
+			$assets     = array(
+				'banners' => array(),
+				'icons'   => array(),
+			);
+
+			$banner_candidates = array(
+				'high' => array( 'assets/banner-1544x500.png', 'assets/banner-1544x500.jpg' ),
+				'low'  => array( 'assets/banner-772x250.png', 'assets/banner-772x250.jpg' ),
+			);
+
+			foreach ( $banner_candidates['high'] as $candidate ) {
+				if ( file_exists( $plugin_dir . '/' . $candidate ) ) {
+					$assets['banners']['high'] = plugins_url( $candidate, $this->plugin_file );
+					break;
+				}
+			}
+			foreach ( $banner_candidates['low'] as $candidate ) {
+				if ( file_exists( $plugin_dir . '/' . $candidate ) ) {
+					$assets['banners']['low'] = plugins_url( $candidate, $this->plugin_file );
+					break;
+				}
+			}
+			if ( ! empty( $assets['banners']['high'] ) && empty( $assets['banners']['low'] ) ) {
+				$assets['banners']['low'] = $assets['banners']['high'];
+			}
+
+			$icon_candidates = array(
+				'2x' => array( 'assets/icon-256x256.png', 'assets/icon-256x256.jpg' ),
+				'1x' => array( 'assets/icon-128x128.png', 'assets/icon-128x128.jpg' ),
+			);
+
+			foreach ( $icon_candidates['2x'] as $candidate ) {
+				if ( file_exists( $plugin_dir . '/' . $candidate ) ) {
+					$assets['icons']['2x'] = plugins_url( $candidate, $this->plugin_file );
+					break;
+				}
+			}
+			foreach ( $icon_candidates['1x'] as $candidate ) {
+				if ( file_exists( $plugin_dir . '/' . $candidate ) ) {
+					$assets['icons']['1x'] = plugins_url( $candidate, $this->plugin_file );
+					break;
+				}
+			}
+			if ( ! empty( $assets['icons']['2x'] ) && empty( $assets['icons']['1x'] ) ) {
+				$assets['icons']['1x'] = $assets['icons']['2x'];
+			}
+
+			return $assets;
 		}
 
 		/**
