@@ -110,8 +110,9 @@ if ( ! class_exists( 'Netfett_Update_Checker' ) ) {
 		 * @return void
 		 */
 		protected function init_hooks(): void {
-			// 1. Update-Prüfung in WordPress einhängen
+			// 1. Update-Prüfung in WordPress einhängen (beim Schreiben und beim Lesen des Transients)
 			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_for_update' ) );
+			add_filter( 'site_transient_update_plugins', array( $this, 'check_for_update' ) );
 
 			// 2. Plugin-Informations-Modal ("Details ansehen")
 			add_filter( 'plugins_api', array( $this, 'plugin_info' ), 20, 3 );
@@ -119,8 +120,9 @@ if ( ! class_exists( 'Netfett_Update_Checker' ) ) {
 			// 3. GitHub-ZIP Entpack-Ordner korrigieren
 			add_filter( 'upgrader_source_selection', array( $this, 'fix_zip_source_dir' ), 10, 4 );
 
-			// 4. Cache leeren, wenn das Plugin aktualisiert wurde
+			// 4. Cache leeren, wenn das Plugin aktualisiert wurde oder "Erneut prüfen" geklickt wird
 			add_action( 'upgrader_process_complete', array( $this, 'purge_cache_on_update' ), 10, 2 );
+			add_action( 'load-update-core.php', array( $this, 'maybe_purge_on_force_check' ) );
 
 			// 5. Bei privatem Repository: Download-Request mit Token autorisieren
 			if ( ! empty( $this->access_token ) ) {
@@ -433,6 +435,17 @@ if ( ! class_exists( 'Netfett_Update_Checker' ) ) {
 				$args['headers']['Accept']        = 'application/octet-stream';
 			}
 			return $args;
+		}
+
+		/**
+		 * Leert den Cache, wenn der Administrator auf "Erneut prüfen" klickt.
+		 *
+		 * @return void
+		 */
+		public function maybe_purge_on_force_check(): void {
+			if ( ! empty( $_GET['force-check'] ) ) {
+				$this->purge_cache();
+			}
 		}
 
 		/**
