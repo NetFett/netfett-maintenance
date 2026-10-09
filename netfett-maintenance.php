@@ -266,23 +266,25 @@ class Netfett_Maintenance {
             <?php endif; ?>
             <p style="color: #646970; font-size: 14px; margin-top: 0; margin-bottom: 25px;"><?php esc_html_e( 'Manage the maintenance status of your website. When active, visitors will see a modern and responsive maintenance page.', 'netfett-maintenance' ); ?></p>
             
-            <form method="post" action="options.php" style="max-width: 800px; background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #c3c4c7; box-shadow: 0 1px 15px rgba(0,0,0,0.04); margin-top: 20px;">
+            <form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" style="max-width: 800px; background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #c3c4c7; box-shadow: 0 1px 15px rgba(0,0,0,0.04); margin-top: 20px;">
                 <?php settings_fields( 'netfett_maint_group' ); ?>
                 <?php do_settings_sections( 'netfett_maint_group' ); ?>
                 
                 <table class="form-table" role="presentation" style="margin-top: 0;">
-                    <tr valign="top">
-                        <th scope="row" style="width: 220px; font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Maintenance Mode Status', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="width: 220px; font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;">
+                            <label for="netfett_maint_enabled"><?php esc_html_e( 'Maintenance Mode Status', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 15px 10px;">
                             <label class="netfett-switch" style="vertical-align: middle;">
-                                <input type="checkbox" name="netfett_maint_enabled" value="1" <?php checked( get_option( 'netfett_maint_enabled', '0' ), '1' ); ?> />
+                                <input type="checkbox" id="netfett_maint_enabled" name="netfett_maint_enabled" value="1" <?php checked( get_option( 'netfett_maint_enabled', '0' ), '1' ); ?> />
                                 <span class="netfett-slider"></span>
                             </label>
                             <span style="margin-left: 15px; font-size: 13px; color: #646970; font-style: italic; vertical-align: middle;"><?php esc_html_e( 'Toggle maintenance mode on/off.', 'netfett-maintenance' ); ?></span>
                         </td>
                     </tr>
                     
-                    <tr valign="top">
+                    <tr>
                         <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Bypass Link (Client Preview)', 'netfett-maintenance' ); ?></th>
                         <td style="padding: 15px 10px;">
                             <?php 
@@ -302,9 +304,9 @@ class Netfett_Maintenance {
                                 </button>
                                 
                                 <span style="margin-left: 10px; color: #646970; font-size: 13px;">
-                                    <?php esc_html_e( 'Bypass Duration:', 'netfett-maintenance' ); ?>
+                                    <label for="netfett_maint_bypass_duration"><?php esc_html_e( 'Bypass Duration:', 'netfett-maintenance' ); ?></label>
                                     <?php $current_duration = get_option( 'netfett_maint_bypass_duration', '7d' ); ?>
-                                    <select name="netfett_maint_bypass_duration" style="margin-left: 5px; height: 30px; line-height: 28px; padding: 0 28px 0 8px; border-radius: 4px; vertical-align: middle; min-width: 100px;">
+                                    <select id="netfett_maint_bypass_duration" name="netfett_maint_bypass_duration" style="margin-left: 5px; height: 30px; line-height: 28px; padding: 0 28px 0 8px; border-radius: 4px; vertical-align: middle; min-width: 100px;">
                                         <option value="1d" <?php selected( $current_duration, '1d' ); ?>><?php esc_html_e( '24 Hours', 'netfett-maintenance' ); ?></option>
                                         <option value="7d" <?php selected( $current_duration, '7d' ); ?>><?php esc_html_e( '7 Days', 'netfett-maintenance' ); ?></option>
                                         <option value="30d" <?php selected( $current_duration, '30d' ); ?>><?php esc_html_e( '30 Days', 'netfett-maintenance' ); ?></option>
@@ -345,7 +347,7 @@ class Netfett_Maintenance {
                         </td>
                     </tr>
                     
-                    <tr valign="top">
+                    <tr>
                         <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Template Design', 'netfett-maintenance' ); ?></th>
                         <td style="padding: 15px 10px;">
                             <?php 
@@ -357,53 +359,53 @@ class Netfett_Maintenance {
                                 <label class="netfett-template-card <?php echo ($selected_template === 'nordic-clean') ? 'active' : ''; ?>" style="cursor: pointer; position: relative; border: 2px solid <?php echo ($selected_template === 'nordic-clean') ? '#2271b1' : '#c3c4c7'; ?>; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s ease-in-out; display: block;">
                                     <input type="radio" name="netfett_maint_template" value="nordic-clean" <?php checked( $selected_template, 'nordic-clean' ); ?> style="position: absolute; opacity: 0; pointer-events: none;" />
                                     <!-- Miniature Preview -->
-                                    <div class="preview-mini nordic-clean-mini" style="height: 120px; background: #f8fafc; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                                        <div class="mini-card" style="width: 70%; height: 50px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box;">
-                                            <div style="width: 55%; height: 4px; background: #0f172a; border-radius: 1px; margin-bottom: 4px;"></div>
-                                            <div style="width: 75%; height: 2px; background: #64748b; border-radius: 1px; margin-bottom: 2px;"></div>
-                                            <div style="width: 60%; height: 2px; background: #64748b; border-radius: 1px;"></div>
-                                        </div>
-                                    </div>
-                                    <div class="card-info" style="padding: 12px; border-top: 1px solid #e5e7eb; text-align: center;">
+                                    <span class="preview-mini nordic-clean-mini" style="height: 120px; background: #f8fafc; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                                        <span class="mini-card" style="width: 70%; height: 50px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box;">
+                                            <span style="display: block; width: 55%; height: 4px; background: #0f172a; border-radius: 1px; margin-bottom: 4px;"></span>
+                                            <span style="display: block; width: 75%; height: 2px; background: #64748b; border-radius: 1px; margin-bottom: 2px;"></span>
+                                            <span style="display: block; width: 60%; height: 2px; background: #64748b; border-radius: 1px;"></span>
+                                        </span>
+                                    </span>
+                                    <span class="card-info" style="display: block; padding: 12px; border-top: 1px solid #e5e7eb; text-align: center;">
                                         <strong style="font-size: 13px; display: block; color: #1d2327; margin-bottom: 4px;">Nordic Clean</strong>
                                         <span style="font-size: 11px; color: #646970;"><?php esc_html_e( 'Minimal Light Vibe', 'netfett-maintenance' ); ?></span>
-                                    </div>
+                                    </span>
                                 </label>
 
                                 <!-- Cosmic Dark -->
                                 <label class="netfett-template-card <?php echo ($selected_template === 'cosmic-dark') ? 'active' : ''; ?>" style="cursor: pointer; position: relative; border: 2px solid <?php echo ($selected_template === 'cosmic-dark') ? '#2271b1' : '#c3c4c7'; ?>; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s ease-in-out; display: block;">
                                     <input type="radio" name="netfett_maint_template" value="cosmic-dark" <?php checked( $selected_template, 'cosmic-dark' ); ?> style="position: absolute; opacity: 0; pointer-events: none;" />
                                     <!-- Miniature Preview -->
-                                    <div class="preview-mini cosmic-dark-mini" style="height: 120px; background: radial-gradient(circle, #1e1b4b 0%, #111827 60%, #0b0f19 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                                        <div class="mini-blob blob1" style="position: absolute; width: 40px; height: 40px; background: #6366f1; border-radius: 50%; filter: blur(10px); opacity: 0.4; top: 10px; left: 10px;"></div>
-                                        <div class="mini-blob blob2" style="position: absolute; width: 50px; height: 50px; background: #d946ef; border-radius: 50%; filter: blur(12px); opacity: 0.4; bottom: 10px; right: 10px;"></div>
-                                        <div class="mini-card" style="width: 70%; height: 50px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box;">
-                                            <div style="width: 55%; height: 4px; background: rgba(255,255,255,0.8); border-radius: 2px; margin-bottom: 4px;"></div>
-                                            <div style="width: 75%; height: 2px; background: rgba(255,255,255,0.4); border-radius: 2px; margin-bottom: 2px;"></div>
-                                            <div style="width: 60%; height: 2px; background: rgba(255,255,255,0.4); border-radius: 2px;"></div>
-                                        </div>
-                                    </div>
-                                    <div class="card-info" style="padding: 12px; border-top: 1px solid #e5e7eb; text-align: center;">
+                                    <span class="preview-mini cosmic-dark-mini" style="height: 120px; background: radial-gradient(circle, #1e1b4b 0%, #111827 60%, #0b0f19 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                                        <span class="mini-blob blob1" style="position: absolute; width: 40px; height: 40px; background: #6366f1; border-radius: 50%; filter: blur(10px); opacity: 0.4; top: 10px; left: 10px; display: block;"></span>
+                                        <span class="mini-blob blob2" style="position: absolute; width: 50px; height: 50px; background: #d946ef; border-radius: 50%; filter: blur(12px); opacity: 0.4; bottom: 10px; right: 10px; display: block;"></span>
+                                        <span class="mini-card" style="width: 70%; height: 50px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box;">
+                                            <span style="display: block; width: 55%; height: 4px; background: rgba(255,255,255,0.8); border-radius: 2px; margin-bottom: 4px;"></span>
+                                            <span style="display: block; width: 75%; height: 2px; background: rgba(255,255,255,0.4); border-radius: 2px; margin-bottom: 2px;"></span>
+                                            <span style="display: block; width: 60%; height: 2px; background: rgba(255,255,255,0.4); border-radius: 2px;"></span>
+                                        </span>
+                                    </span>
+                                    <span class="card-info" style="display: block; padding: 12px; border-top: 1px solid #e5e7eb; text-align: center;">
                                         <strong style="font-size: 13px; display: block; color: #1d2327; margin-bottom: 4px;">Cosmic Dark</strong>
                                         <span style="font-size: 11px; color: #646970;"><?php esc_html_e( 'Modern Dark Glow', 'netfett-maintenance' ); ?></span>
-                                    </div>
+                                    </span>
                                 </label>
 
                                 <!-- Cyberpunk Neon -->
                                 <label class="netfett-template-card <?php echo ($selected_template === 'cyberpunk-neon') ? 'active' : ''; ?>" style="cursor: pointer; position: relative; border: 2px solid <?php echo ($selected_template === 'cyberpunk-neon') ? '#2271b1' : '#c3c4c7'; ?>; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s ease-in-out; display: block;">
                                     <input type="radio" name="netfett_maint_template" value="cyberpunk-neon" <?php checked( $selected_template, 'cyberpunk-neon' ); ?> style="position: absolute; opacity: 0; pointer-events: none;" />
                                     <!-- Miniature Preview -->
-                                    <div class="preview-mini cyberpunk-neon-mini" style="height: 120px; background: #05050a; display: flex; align-items: center; justify-content: center; position: relative; background-image: linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px); background-size: 8px 8px; overflow: hidden;">
-                                        <div class="mini-card" style="width: 70%; height: 50px; background: rgba(5,5,10,0.9); border: 1px solid #00ffff; box-shadow: 0 0 4px #00ffff; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box;">
-                                            <div style="width: 55%; height: 4px; background: #ffffff; text-shadow: 0 0 2px #ff007f; margin-bottom: 4px; border-radius: 1px;"></div>
-                                            <div style="width: 75%; height: 2px; background: #00ffff; margin-bottom: 2px; border-radius: 1px;"></div>
-                                            <div style="width: 60%; height: 2px; background: #00ffff; border-radius: 1px;"></div>
-                                        </div>
-                                    </div>
-                                    <div class="card-info" style="padding: 12px; border-top: 1px solid #e5e7eb; text-align: center;">
+                                    <span class="preview-mini cyberpunk-neon-mini" style="height: 120px; background: #05050a; display: flex; align-items: center; justify-content: center; position: relative; background-image: linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px); background-size: 8px 8px; overflow: hidden;">
+                                        <span class="mini-card" style="width: 70%; height: 50px; background: rgba(5,5,10,0.9); border: 1px solid #00ffff; box-shadow: 0 0 4px #00ffff; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box;">
+                                            <span style="display: block; width: 55%; height: 4px; background: #ffffff; text-shadow: 0 0 2px #ff007f; margin-bottom: 4px; border-radius: 1px;"></span>
+                                            <span style="display: block; width: 75%; height: 2px; background: #00ffff; margin-bottom: 2px; border-radius: 1px;"></span>
+                                            <span style="display: block; width: 60%; height: 2px; background: #00ffff; border-radius: 1px;"></span>
+                                        </span>
+                                    </span>
+                                    <span class="card-info" style="display: block; padding: 12px; border-top: 1px solid #e5e7eb; text-align: center;">
                                         <strong style="font-size: 13px; display: block; color: #1d2327; margin-bottom: 4px;">Cyberpunk Neon</strong>
                                         <span style="font-size: 11px; color: #646970;"><?php esc_html_e( 'Futuristic Tech Glow', 'netfett-maintenance' ); ?></span>
-                                    </div>
+                                    </span>
                                 </label>
                             </div>
                             <p class="description">
@@ -414,7 +416,7 @@ class Netfett_Maintenance {
                                 document.addEventListener('DOMContentLoaded', function() {
                                     const cards = document.querySelectorAll('.netfett-template-card');
                                     cards.forEach(function(card) {
-                                        card.addEventListener('click', function(e) {
+                                        card.addEventListener('click', function() {
                                             cards.forEach(function(c) {
                                                 c.classList.remove('active');
                                                 c.style.borderColor = '#c3c4c7';
@@ -432,14 +434,14 @@ class Netfett_Maintenance {
                         </td>
                     </tr>
                     
-                    <tr valign="top">
+                    <tr>
                         <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Logo Image', 'netfett-maintenance' ); ?></th>
                         <td style="padding: 15px 10px;">
                             <?php 
                             $logo_url = get_option( 'netfett_maint_logo', '' );
                             ?>
                             <div id="netfett-logo-preview-wrapper" style="margin-bottom: 10px; max-width: 200px; <?php echo empty( $logo_url ) ? 'display: none;' : ''; ?>">
-                                <img id="netfett-logo-preview" src="<?php echo esc_url( $logo_url ); ?>" style="max-width: 100%; height: auto; border: 1px solid #c3c4c7; padding: 5px; background: #f0f0f1; border-radius: 4px;" />
+                                <img id="netfett-logo-preview" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php esc_attr_e( 'Logo Preview', 'netfett-maintenance' ); ?>" style="max-width: 100%; height: auto; border: 1px solid #c3c4c7; padding: 5px; background: #f0f0f1; border-radius: 4px;" />
                             </div>
                             <input type="hidden" name="netfett_maint_logo" id="netfett-logo-url" value="<?php echo esc_attr( $logo_url ); ?>" />
                             <button type="button" class="button" id="netfett-logo-upload-button"><?php esc_html_e( 'Select Logo', 'netfett-maintenance' ); ?></button>
@@ -499,8 +501,10 @@ class Netfett_Maintenance {
                         </td>
                     </tr>
                     
-                    <tr valign="top">
-                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Estimated Completion (Countdown)', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;">
+                            <label for="netfett-countdown-input"><?php esc_html_e( 'Estimated Completion (Countdown)', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 15px 10px;">
                             <?php 
                             $countdown_val = get_option( 'netfett_maint_countdown', '' );
@@ -533,65 +537,79 @@ class Netfett_Maintenance {
                         </td>
                     </tr>
                     
-                    <tr valign="top">
-                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Maintenance Page Title', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;">
+                            <label for="netfett_maint_title"><?php esc_html_e( 'Maintenance Page Title', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 15px 10px;">
-                            <input type="text" name="netfett_maint_title" value="<?php echo esc_attr( get_option( 'netfett_maint_title', __( 'We will be back soon!', 'netfett-maintenance' ) ) ); ?>" class="regular-text" style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
+                            <input type="text" id="netfett_maint_title" name="netfett_maint_title" value="<?php echo esc_attr( get_option( 'netfett_maint_title', __( 'We will be back soon!', 'netfett-maintenance' ) ) ); ?>" class="regular-text" style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
                         </td>
                     </tr>
                     
-                    <tr valign="top">
-                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Maintenance Text / Message', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;">
+                            <label for="netfett_maint_message"><?php esc_html_e( 'Maintenance Text / Message', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 15px 10px;">
-                            <textarea name="netfett_maint_message" rows="5" class="large-text" style="width: 100%; max-width: 500px; border-radius: 4px; font-family: inherit;"><?php echo esc_textarea( get_option( 'netfett_maint_message', __( 'Our website is currently undergoing maintenance. We are working on something great and will be back for you shortly.', 'netfett-maintenance' ) ) ); ?></textarea>
+                            <textarea id="netfett_maint_message" name="netfett_maint_message" rows="5" class="large-text" style="width: 100%; max-width: 500px; border-radius: 4px; font-family: inherit;"><?php echo esc_textarea( get_option( 'netfett_maint_message', __( 'Our website is currently undergoing maintenance. We are working on something great and will be back for you shortly.', 'netfett-maintenance' ) ) ); ?></textarea>
                         </td>
                     </tr>
                     
-                    <tr valign="top">
-                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;"><?php esc_html_e( 'Contact Email (optional)', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 20px 10px 20px 0;">
+                            <label for="netfett_maint_email"><?php esc_html_e( 'Contact Email (optional)', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 15px 10px;">
-                            <input type="email" name="netfett_maint_email" value="<?php echo esc_attr( get_option( 'netfett_maint_email', get_option('admin_email') ) ); ?>" class="regular-text" style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
+                            <input type="email" id="netfett_maint_email" name="netfett_maint_email" value="<?php echo esc_attr( get_option( 'netfett_maint_email', get_option('admin_email') ) ); ?>" class="regular-text" style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
                             <p class="description" style="margin-top: 5px;"><?php esc_html_e( 'Leave an email address for visitor inquiries.', 'netfett-maintenance' ); ?></p>
                         </td>
                     </tr>
 
                     <tr>
-                        <td colspan="2" style="padding: 10px 0;"><hr style="border: 0; border-top: 1px solid #dbdec2; border-color: #dcdcde; margin: 15px 0;" /></td>
+                        <td colspan="2" style="padding: 10px 0;"><hr style="border: 0; border-top: 1px solid #dcdcde; margin: 15px 0;" /></td>
                     </tr>
                     
-                    <tr valign="top">
+                    <tr>
                         <th scope="row" colspan="2" style="font-weight: 600; font-size: 16px; color: #1d2327; padding-bottom: 10px;"><?php esc_html_e( 'Social Media Links', 'netfett-maintenance' ); ?></th>
                     </tr>
 
-                    <tr valign="top">
-                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;"><?php esc_html_e( 'Instagram URL', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;">
+                            <label for="netfett_maint_social_instagram"><?php esc_html_e( 'Instagram URL', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 10px 10px;">
-                            <input type="url" name="netfett_maint_social_instagram" value="<?php echo esc_url( get_option( 'netfett_maint_social_instagram' ) ); ?>" class="regular-text" placeholder="https://instagram.com/netfett" style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
+                            <input type="url" id="netfett_maint_social_instagram" name="netfett_maint_social_instagram" value="<?php echo esc_url( get_option( 'netfett_maint_social_instagram' ) ); ?>" class="regular-text" placeholder="https://instagram.com/netfett" style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
                         </td>
                     </tr>
 
-                    <tr valign="top">
-                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;"><?php esc_html_e( 'Facebook URL', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;">
+                            <label for="netfett_maint_social_facebook"><?php esc_html_e( 'Facebook URL', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 10px 10px;">
-                            <input type="url" name="netfett_maint_social_facebook" value="<?php echo esc_url( get_option( 'netfett_maint_social_facebook' ) ); ?>" class="regular-text" placeholder="https://facebook.com/..." style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
+                            <input type="url" id="netfett_maint_social_facebook" name="netfett_maint_social_facebook" value="<?php echo esc_url( get_option( 'netfett_maint_social_facebook' ) ); ?>" class="regular-text" placeholder="https://facebook.com/..." style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
                         </td>
                     </tr>
 
-                    <tr valign="top">
-                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;"><?php esc_html_e( 'LinkedIn URL', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;">
+                            <label for="netfett_maint_social_linkedin"><?php esc_html_e( 'LinkedIn URL', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 10px 10px;">
-                            <input type="url" name="netfett_maint_social_linkedin" value="<?php echo esc_url( get_option( 'netfett_maint_social_linkedin' ) ); ?>" class="regular-text" placeholder="https://linkedin.com/in/..." style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
+                            <input type="url" id="netfett_maint_social_linkedin" name="netfett_maint_social_linkedin" value="<?php echo esc_url( get_option( 'netfett_maint_social_linkedin' ) ); ?>" class="regular-text" placeholder="https://linkedin.com/in/..." style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
                         </td>
                     </tr>
 
-                    <tr valign="top">
-                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;"><?php esc_html_e( 'Twitter / X URL', 'netfett-maintenance' ); ?></th>
+                    <tr>
+                        <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;">
+                            <label for="netfett_maint_social_twitter"><?php esc_html_e( 'Twitter / X URL', 'netfett-maintenance' ); ?></label>
+                        </th>
                         <td style="padding: 10px 10px;">
-                            <input type="url" name="netfett_maint_social_twitter" value="<?php echo esc_url( get_option( 'netfett_maint_social_twitter' ) ); ?>" class="regular-text" placeholder="https://twitter.com/..." style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
+                            <input type="url" id="netfett_maint_social_twitter" name="netfett_maint_social_twitter" value="<?php echo esc_url( get_option( 'netfett_maint_social_twitter' ) ); ?>" class="regular-text" placeholder="https://twitter.com/..." style="width: 100%; max-width: 500px; height: 35px; border-radius: 4px;" />
                         </td>
                     </tr>
 
-                    <tr valign="top">
+                    <tr>
                         <th scope="row" style="font-weight: 600; font-size: 14px; padding: 15px 10px 15px 0;"><?php esc_html_e( 'Uninstall Behavior', 'netfett-maintenance' ); ?></th>
                         <td style="padding: 10px 10px;">
                             <?php $delete_on_uninstall_val = get_option( 'netfett_maint_delete_on_uninstall', '0' ); ?>
@@ -674,6 +692,7 @@ class Netfett_Maintenance {
                     transform: translateY(-2px);
                     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
                 }
+                /* noinspection CssUnusedSymbol */
                 .netfett-template-card.active {
                     border-color: #2271b1 !important;
                     box-shadow: 0 0 0 1px #2271b1, 0 4px 12px rgba(34,113,177,0.15) !important;
@@ -961,6 +980,10 @@ class Netfett_Maintenance {
 }
 
 new Netfett_Maintenance();
+
+// Automatischer Update-Checker über GitHub Releases
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-netfett-update-checker.php';
+new Netfett_Update_Checker( __FILE__, 'NetFett/netfett-maintenance' );
 
 register_activation_hook( __FILE__, function() {
     update_option( 'netfett_maint_activation_notice', 1 );
