@@ -4,6 +4,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Target release tag (leave empty for latest release)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -34,5 +39,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="${{ github.event.release.tag_name || github.ref_name }}"
+          TAG="${{ github.event.inputs.tag_name || github.event.release.tag_name }}"
+          if [ -z "$TAG" ]; then
+            TAG=$(gh release view --json tagName -q .tagName)
+          fi
+          echo "Target release tag is: $TAG"
           gh release upload "$TAG" build/netfett-maintenance.zip --clobber
