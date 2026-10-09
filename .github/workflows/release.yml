@@ -1,0 +1,38 @@
+name: Release Plugin ZIP
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-attach-zip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build clean WordPress plugin package
+        run: |
+          mkdir -p build/netfett-maintenance
+          rsync -av \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='.idea' \
+            --exclude='.vscode' \
+            --exclude='*.bak' \
+            --exclude='build' \
+            ./ build/netfett-maintenance/
+          cd build
+          zip -r netfett-maintenance.zip netfett-maintenance/
+
+      - name: Attach ZIP to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.release.tag_name || github.ref_name }}"
+          gh release upload "$TAG" build/netfett-maintenance.zip --clobber
